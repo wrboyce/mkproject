@@ -12,5 +12,12 @@ setup(
     url='http://github.com/wrboyce/mkproject',
     py_modules=['mkproject'],
     scripts=['bin/mkproject'],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Licence :: BSD',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: POSIX',
+    ]
 )
 copy_tree(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates'), '/etc/mkproject/')
