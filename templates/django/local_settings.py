@@ -1,0 +1,2 @@
+CACHE_BACKEND = 'dummy://'
+DEBUG = TEMPLATE_DEBUG = True
