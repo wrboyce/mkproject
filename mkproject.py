@@ -1,11 +1,13 @@
 #!/usr/bin/env python
+
+from optparse import OptionParser
 import ConfigParser
 import os
 import shutil
 import sys
 
 
-def mkproject(type, name):
+def mkproject(type, name, basedir=None):
     """ ``mkproject`` """
     skel = _get_projectdir(type)
     try:
@@ -15,7 +17,8 @@ def mkproject(type, name):
         sys.path = syspath
     except ImportError:
         conf = object()
-    basedir = os.environ.get('MKPROJECT_ROOT', '%s/Dev' % os.environ['HOME'])
+    if not basedir:
+        basedir = os.environ.get('MKPROJECT_ROOT', '%s/Dev' % os.environ['HOME'])
     if os.path.isdir(os.path.join(basedir, name)):
         raise ProjectAlreadyExists
     os.chdir(basedir)
@@ -67,5 +70,17 @@ class UnknownProjectType(Exception):
 class ProjectAlreadyExists(Exception):
     pass
 
+def main():
+    parser = OptionParser(usage="usage: %prog [options] <type> <name>")
+    parser.add_option("-d", "--directory", dest="dir",
+                  metavar="DIR", help="create project in DIR")
+    (options, args) = parser.parse_args()
+    if len(args) != 2:
+        parser.print_help()
+        sys.exit(1)
+    else:
+        mkproject(args[0], args[1], options.dir)
+
 if __name__ == '__main__':
-    mkproject(*sys.argv[1:3])
+    main()
+
