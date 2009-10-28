@@ -6,6 +6,13 @@ import os
 import shutil
 import sys
 
+def get_file_list(directory):
+    """Returns a list of the files in a directory and its subdirectories."""
+    files = []
+    for root, subfolders, subfiles in os.walk(directory):
+        files += [os.path.join(root,file) for file in subfiles]
+
+    return files
 
 def mkproject(type, name, basedir=None):
     """ ``mkproject`` """
@@ -42,7 +49,7 @@ def mkproject(type, name, basedir=None):
     target = os.path.join(basedir, name, getattr(conf, 'path', './') % vars)
     shutil.copytree(skel, target, symlinks=True)
     os.chdir(target)
-    files = [filename.strip() for filename in os.popen('find %s -type f' % target).read().split('\n') if filename.strip()]
+    files = get_file_list(".")
 
     # replace project variables
     for (search, replace) in vars.iteritems():
