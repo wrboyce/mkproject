@@ -18,7 +18,7 @@ def mkproject(type, name, basedir=None):
     except ImportError:
         conf = object()
     if not basedir:
-        basedir = os.environ.get('MKPROJECT_ROOT', '%s/Dev' % os.environ['HOME'])
+        basedir = os.environ.get('MKPROJECT_ROOT', '.')
     if os.path.isdir(os.path.join(basedir, name)):
         raise ProjectAlreadyExists
     os.chdir(basedir)
