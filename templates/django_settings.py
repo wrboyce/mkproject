@@ -11,6 +11,6 @@ path = 'src/%(name)s'
 post_commands = (
     """sed -i "" s/_SECRET_KEY_/`python -c "import random; import string; print str().join([random.choice('abcdefghijklmnopqrstuvwxyz0123456789@#^&(-_=+)') for i in xrange(50)])"`/ settings.py""",
     'git init',
-    'git add .gitignore *',
+    'git add -f .gitignore *',
     'git commit -m "initial commit"',
 )

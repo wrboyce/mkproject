@@ -17,7 +17,6 @@ MEDIA_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 ROOT_URLCONF = '${name}.urls'
-APPEND_SLASH = False
 
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
