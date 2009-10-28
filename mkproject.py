@@ -68,4 +68,6 @@ class ProjectAlreadyExists(Exception):
     pass
 
 if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        exit("USAGE: mkproject TYPE NAME")
     mkproject(*sys.argv[1:3])
