@@ -27,4 +27,6 @@ setup(
         'Operating System :: POSIX',
     ]
 )
-copy_tree(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates'), '/etc/mkproject/')
+template_path = "/etc/mkproject/"
+if not os.path.exists(template_path):
+    copy_tree(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates'), template_path)
