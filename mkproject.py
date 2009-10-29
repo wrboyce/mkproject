@@ -33,7 +33,10 @@ def mkproject(type, name):
 
     # run pre-installation commands
     for cmd in getattr(conf, 'pre_commands', ()):
-        os.popen(cmd % vars).read()
+        if callable(cmd):
+            cmd(**vars)
+        else:
+            os.popen(cmd % vars).read()
 
     # copy skeleton tree to target directory
     target = os.path.join(basedir, name, getattr(conf, 'path', './') % vars)
@@ -48,7 +51,10 @@ def mkproject(type, name):
 
     # run post-installation commands
     for cmd in getattr(conf, 'post_commands', ()):
-        os.popen(cmd % vars).read()
+        if callable(cmd):
+            cmd(**vars)
+        else:
+            os.popen(cmd % vars).read()
 
     # done!
     print '%s project "%s" created at %s' % (type, name, os.path.join(basedir, name))
