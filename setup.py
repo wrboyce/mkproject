@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-from distutils.core import setup
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
 from distutils.dir_util import copy_tree
 import os
 
@@ -11,7 +15,10 @@ setup(
     author_email='me@willboyce.com',
     url='http://github.com/wrboyce/mkproject',
     py_modules=['mkproject'],
-    scripts=['bin/mkproject'],
+    entry_points = { 
+    'console_scripts':[
+        'mkproject = mkproject:main'
+    ]},  
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
@@ -20,4 +27,6 @@ setup(
         'Operating System :: POSIX',
     ]
 )
-copy_tree(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates'), '/etc/mkproject/')
+template_path = "/etc/mkproject/"
+if not os.path.exists(template_path):
+    copy_tree(os.path.join(os.path.realpath(os.path.dirname(__file__)), 'templates'), template_path)

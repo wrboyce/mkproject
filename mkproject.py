@@ -1,11 +1,20 @@
 #!/usr/bin/env python
+
+from optparse import OptionParser
 import ConfigParser
 import os
 import shutil
 import sys
 
+def get_file_list(directory):
+    """Returns a list of the files in a directory and its subdirectories."""
+    files = []
+    for root, subfolders, subfiles in os.walk(directory):
+        files += [os.path.join(root,file) for file in subfiles]
 
-def mkproject(type, name):
+    return files
+
+def mkproject(type, name, basedir=None):
     """ ``mkproject`` """
     skel = _get_projectdir(type)
     try:
@@ -15,7 +24,8 @@ def mkproject(type, name):
         sys.path = syspath
     except ImportError:
         conf = object()
-    basedir = os.environ.get('MKPROJECT_ROOT', '%s/Dev' % os.environ['HOME'])
+    if not basedir:
+        basedir = os.environ.get('MKPROJECT_ROOT', '.')
     if os.path.isdir(os.path.join(basedir, name)):
         raise ProjectAlreadyExists
     os.chdir(basedir)
@@ -42,7 +52,7 @@ def mkproject(type, name):
     target = os.path.join(basedir, name, getattr(conf, 'path', './') % vars)
     shutil.copytree(skel, target, symlinks=True)
     os.chdir(target)
-    files = [filename.strip() for filename in os.popen('find %s -type f' % target).read().split('\n') if filename.strip()]
+    files = get_file_list(".")
 
     # replace project variables
     for (search, replace) in vars.iteritems():
@@ -73,7 +83,17 @@ class UnknownProjectType(Exception):
 class ProjectAlreadyExists(Exception):
     pass
 
+def main():
+    parser = OptionParser(usage="usage: %prog [options] <type> <name>")
+    parser.add_option("-d", "--directory", dest="dir",
+                  metavar="DIR", help="create project in DIR")
+    (options, args) = parser.parse_args()
+    if len(args) != 2:
+        parser.print_help()
+        sys.exit(1)
+    else:
+        mkproject(args[0], args[1], options.dir)
+
 if __name__ == '__main__':
-    if len(sys.argv) != 3:
-        exit("USAGE: mkproject TYPE NAME")
-    mkproject(*sys.argv[1:3])
+    main()
+
